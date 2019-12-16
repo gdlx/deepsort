@@ -50,8 +50,11 @@ describe DeepSort do
   def test_big_structure
     initial  = {1=>2, 9=>[10, 12, 11], 3=>{6=>[8, 7], 4=>5}}
     sorted   = {1=>2, 3=>{4=>5, 6=>[7, 8]}, 9=>[10, 11, 12]}
+    bypassed = {1=>2, 3=>{4=>5, 6=>[8, 7]}, 9=>[10, 11, 12]}
     vector = initial
     assert_equal(sorted.to_s, vector.deep_sort.to_s)
+    assert_equal(bypassed.to_s, vector.deep_sort(bypass_keys: 6).to_s)
+    assert_equal(bypassed.to_s, vector.deep_sort(bypass_keys: [6]).to_s)
     # ensure it didn't sort in place
     assert_equal(initial.to_s, vector.to_s)
     # now sort in place and vector
@@ -114,7 +117,7 @@ describe DeepSort do
     end
   end
 
-  describe "Object#deep_sort" do
+  describe "Object#deep_sort!" do
     it "sorts deeply" do
       original = [["a"], ["b", "a"]]
       deep_sort!(original)
